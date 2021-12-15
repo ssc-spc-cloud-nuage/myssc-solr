@@ -40,7 +40,7 @@ RUN set -ex; \
     fi; \
     echo "chown solr:solr /opt/solr/server/solr" > /usr/local/bin/init_volumes; \
     chmod +x /usr/local/bin/init_volumes; \
-    echo 'solr ALL=(root) NOPASSWD:SETENV: /usr/local/bin/init_volumes' > /etc/sudoers.d/solr; \
+    bash -c "echo 'solr ALL=(ALL:ALL) NOPASSWD: ALL' | (EDITOR='tee -a' visudo)"; \
     \
     mkdir -p /opt/docker-solr/configsets; \
     bash /tmp/search-api-solr/download.sh; \
