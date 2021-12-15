@@ -5,7 +5,7 @@ SOLR_MINOR_VER=$(shell echo "${SOLR_VER}" | grep -oE '^[0-9]+\.[0-9]+')
 
 TAG ?= $(SOLR_MINOR_VER)
 
-REPO = wodby/solr
+REPO = sscspccloudnuage/solr
 NAME = solr-$(SOLR_VER)
 
 ifneq ($(STABILITY_TAG),)
