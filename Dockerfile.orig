@@ -1,6 +1,6 @@
 ARG SOLR_VER
 
-FROM solr:${SOLR_VER}
+FROM wodby/base-solr:${SOLR_VER}
 
 ARG SOLR_VER
 
@@ -15,21 +15,19 @@ COPY configsets /tmp/configsets
 
 RUN set -ex; \
     \
-    apt update; \
-    apt install -y \
-#        bash \
+    apk add --no-cache \
+        bash \
         curl \
-        wget \
         grep \
         make \
         sudo; \
     \
-    apt install -y \
+    apk add --update --no-cache -t .solr-build-deps \
         jq \
-        python3-pip \
+        py3-pip \
         sed; \
     \
-    pip install yq; \
+    pip3 install yq; \
     \
     # 8.x version has a symlink and wrong permissions.
     if [[ -d "/opt/solr-${SOLR_VER}" ]]; then \
@@ -44,9 +42,15 @@ RUN set -ex; \
     \
     mkdir -p /opt/docker-solr/configsets; \
     bash /tmp/search-api-solr/download.sh; \
-    bash /tmp/search-api-solr/move-files.sh; \
+    # Move out from volume to always keep them inside of the image.
+    sh mv /opt/solr/server/solr/configsets/* /opt/docker-solr/configsets/; \
+    sh mv /opt/solr/server/solr/solr.xml /opt/docker-solr/solr.xml; \
+    if [[ -d /tmp/configsets/"${SOLR_VER:0:1}"/ ]]; then \
+        cp -R /tmp/configsets/"${SOLR_VER:0:1}"/* /opt/docker-solr/configsets/; \
+    fi; \
+    chown -R solr:solr /opt/docker-solr/configsets; \
     \
-    # apk del --purge .solr-build-deps; \
+    apk del --purge .solr-build-deps; \
     rm -rf \
         /tmp/configsets \
         /tmp/search-api-solr \

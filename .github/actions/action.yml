@@ -17,6 +17,5 @@ runs:
     run: |
       set -e
       make
-      make test
       . $GITHUB_ACTION_PATH/release.sh
     shell: bash
