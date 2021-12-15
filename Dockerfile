@@ -45,7 +45,6 @@ RUN set -ex; \
     mkdir -p /opt/docker-solr/configsets; \
     bash /tmp/search-api-solr/download.sh; \
     bash /tmp/search-api-solr/move-files.sh; \
-    chown -R solr:solr /opt/solr/server/solr; \
     \
     # apk del --purge .solr-build-deps; \
     rm -rf \
