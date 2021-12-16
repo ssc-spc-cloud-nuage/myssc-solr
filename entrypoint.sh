@@ -6,21 +6,24 @@ if [[ -n "${DEBUG}" ]]; then
     set -x
 fi
 
+WORKDIR="/opt/solr-${SOLR_VER}/server/solr"
+
 sudo init_volumes
 
-mkdir -p /opt/solr/server/solr/configsets
+# Moved into init_volumed
+# mkdir -p /opt/solr/server/solr/configsets
 
 migrate
 
 # Symlinks config sets to volume.
 for configset in $(ls -d /opt/docker-solr/configsets/*); do
-    if [[ ! -d "/opt/solr/server/solr/configsets/${configset##*/}" ]]; then
-        ln -s "${configset}" /opt/solr/server/solr/configsets/;
+    if [[ ! -d "${WORKDIR}/configsets/${configset##*/}" ]]; then
+        ln -s "${configset}" "${WORKDIR}"/configsets/;
     fi
 done
 
-if [[ ! -f /opt/solr/server/solr/solr.xml ]]; then
-    ln -s /opt/docker-solr/solr.xml /opt/solr/server/solr/solr.xml
+if [[ ! -f "${WORKDIR}"/solr.xml ]]; then
+    ln -s /opt/docker-solr/solr.xml "${WORKDIR}"/solr.xml
 fi
 
 if [[ -f /opt/solr/bin/solr.in.sh ]]; then

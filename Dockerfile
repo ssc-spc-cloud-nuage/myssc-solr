@@ -38,7 +38,8 @@ RUN set -ex; \
         chown -R solr:solr /opt/solr /etc/default/; \
         cd /opt/solr; \
     fi; \
-    echo "chown solr:solr /opt/solr/server/solr" > /usr/local/bin/init_volumes; \
+    echo "chown solr:solr /opt/solr-${SOLR_VER}/server/solr" > /usr/local/bin/init_volumes; \
+    echo "mkdir -p /opt/solr-${SOLR_VER}/server/solr/configsets" >> /usr/local/bin/init_volumes; \
     chmod +x /usr/local/bin/init_volumes; \
     bash -c "echo 'solr ALL=(ALL:ALL) NOPASSWD: ALL' | (EDITOR='tee -a' visudo)"; \
     \
@@ -58,8 +59,8 @@ COPY entrypoint.sh /
 
 USER solr
 
-VOLUME /opt/solr/server/solr
-WORKDIR /opt/solr/server/solr
+VOLUME /opt/solr-${SOLR_VER}/server/solr
+WORKDIR /opt/solr-${SOLR_VER}/server/solr
 
-# ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["solr-foreground"]
