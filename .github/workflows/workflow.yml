@@ -22,7 +22,7 @@ jobs:
     - uses: ./.github/actions
       with:
         version: '8.11.0'
-        tags: 8.11.0-d3,latest
+        tags: 8.11.0-d4,latest
   # solr-77:
   #   runs-on: ubuntu-latest
   #   steps:

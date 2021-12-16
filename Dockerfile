@@ -62,5 +62,5 @@ USER solr
 VOLUME /opt/solr/server/home
 WORKDIR /opt/solr/server/home
 
-# ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["solr-foreground"]

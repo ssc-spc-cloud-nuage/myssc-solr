@@ -13,7 +13,7 @@ sudo init_volumes
 # Moved into init_volumed
 # mkdir -p /opt/solr/server/solr/configsets
 
-migrate
+# migrate
 
 # Symlinks config sets to volume.
 for configset in $(ls -d /opt/docker-solr/configsets/*); do
