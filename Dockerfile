@@ -5,7 +5,7 @@ FROM solr:${SOLR_VER}
 ARG SOLR_VER
 
 ENV SOLR_HEAP="1024m" \
-    SOLR_HOME=/opt/solr/server/solr \
+    SOLR_HOME=/opt/solr/server/home \
     SOLR_VER="${SOLR_VER}"
 
 USER root
@@ -38,8 +38,8 @@ RUN set -ex; \
         chown -R solr:solr /opt/solr /etc/default/; \
         cd /opt/solr; \
     fi; \
-    echo "chown solr:solr /opt/solr-${SOLR_VER}/server/home" > /usr/local/bin/init_volumes; \
-    echo "mkdir -p /opt/solr-${SOLR_VER}/server/home/configsets" >> /usr/local/bin/init_volumes; \
+    echo "chown solr:solr /opt/solr/server/home" > /usr/local/bin/init_volumes; \
+    echo "mkdir -p /opt/solr/server/home/configsets" >> /usr/local/bin/init_volumes; \
     chmod +x /usr/local/bin/init_volumes; \
     bash -c "echo 'solr ALL=(ALL:ALL) NOPASSWD: ALL' | (EDITOR='tee -a' visudo)"; \
     \
@@ -59,8 +59,8 @@ COPY entrypoint.sh /
 
 USER solr
 
-VOLUME /opt/solr-${SOLR_VER}/server/home
-WORKDIR /opt/solr-${SOLR_VER}/server/home
+VOLUME /opt/solr/server/home
+WORKDIR /opt/solr/server/home
 
 # ENTRYPOINT ["/entrypoint.sh"]
 CMD ["solr-foreground"]
