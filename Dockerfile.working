@@ -1,6 +1,6 @@
 ARG SOLR_VER
 
-FROM solr:${SOLR_VER} AS build
+FROM solr:${SOLR_VER}
 
 ARG SOLR_VER
 
@@ -38,50 +38,22 @@ RUN set -ex; \
         chown -R solr:solr /opt/solr /etc/default/; \
         cd /opt/solr; \
     fi; \
-    \
-    mkdir -p /opt/docker-solr/configsets
-
-RUN bash /tmp/search-api-solr/download.sh; \
-    bash /tmp/search-api-solr/move-files.sh
-
-FROM solr:${SOLR_VER}
-
-ARG SOLR_VER
-
-ENV SOLR_HEAP="1024m" \
-    SOLR_HOME=/opt/solr/server/home \
-    SOLR_VER="${SOLR_VER}"
-
-USER root
-
-RUN set -ex; \
-    \
-    apt update; \
-    apt install -y \
-        sudo; \
-    \
-    # 8.x version has a symlink and wrong permissions.
-    if [[ -d "/opt/solr-${SOLR_VER}" ]]; then \
-        rm -rf /opt/solr; \
-        mv "/opt/solr-${SOLR_VER}" /opt/solr; \
-        chown -R solr:solr /opt/solr /etc/default/; \
-        cd /opt/solr; \
-    fi; \
     echo "chown solr:solr /opt/solr/server/home" > /usr/local/bin/init_volumes; \
     echo "mkdir -p /opt/solr/server/home/configsets" >> /usr/local/bin/init_volumes; \
     chmod +x /usr/local/bin/init_volumes; \
     bash -c "echo 'solr ALL=(ALL:ALL) NOPASSWD: ALL' | (EDITOR='tee -a' visudo)"; \
     \
     mkdir -p /opt/docker-solr/configsets; \
+    bash /tmp/search-api-solr/download.sh; \
+    bash /tmp/search-api-solr/move-files.sh; \
     \
-    apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts/; \
+    # apk del --purge .solr-build-deps; \
     rm -rf \
         /tmp/configsets \
         /tmp/search-api-solr \
         /opt/solr/server/solr/mycores \
         /var/cache/apk/*
 
-COPY --from=build --chown=solr:solr /opt/docker-solr/configsets /opt/docker-solr/configsets
 COPY bin /usr/local/bin
 COPY entrypoint.sh /
 
@@ -92,4 +64,3 @@ WORKDIR /opt/solr/server/home
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["solr-foreground"]
-
