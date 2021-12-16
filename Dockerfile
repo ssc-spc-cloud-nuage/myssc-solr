@@ -67,27 +67,38 @@ RUN set -ex; \
         chown -R solr:solr /opt/solr /etc/default/; \
         cd /opt/solr; \
     fi; \
-    echo "chown solr:solr /opt/solr/server/home" > /usr/local/bin/init_volumes; \
     echo "mkdir -p /opt/solr/server/home/configsets" >> /usr/local/bin/init_volumes; \
+    echo "chown -R solr:solr /opt/solr/server/home" > /usr/local/bin/init_volumes; \
     chmod +x /usr/local/bin/init_volumes; \
     bash -c "echo 'solr ALL=(ALL:ALL) NOPASSWD: ALL' | (EDITOR='tee -a' visudo)"; \
     \
     mkdir -p /opt/docker-solr/configsets; \
+    mkdir -p /opt/solr/server/home; \
+    chown -R solr:solr /opt/solr/server/home; \
+    chown -R solr:solr /opt/docker-solr; \
     \
     apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts/; \
     rm -rf \
         /tmp/configsets \
         /tmp/search-api-solr \
         /opt/solr/server/solr/mycores \
-        /var/cache/apk/*
+        /var/cache/apk/*;\
+    \
+    # Temp fix for log4j vulnerability
+    rm -f /opt/solr/server/lib/ext/log4j-1.2-api-2.14.1.jar; \
+    rm -f /opt/solr/server/lib/ext/log4j-api-2.14.1.jar; \
+    rm -f /opt/solr/server/lib/ext/log4j-core-2.14.1.jar; \
+    rm -f /opt/solr/server/lib/ext/log4j-slf4j-impl-2.14.1.jar; \
+    rm -f /opt/solr/server/lib/ext/log4j-web-2.14.1.jar
 
 COPY --from=build --chown=solr:solr /opt/docker-solr/configsets /opt/docker-solr/configsets
 COPY bin /usr/local/bin
 COPY entrypoint.sh /
+COPY log4j-bin/* /opt/solr/server/lib/ext/
 
 USER solr
 
-VOLUME /opt/solr/server/home
+# VOLUME /opt/solr/server/home
 WORKDIR /opt/solr/server/home
 
 ENTRYPOINT ["/entrypoint.sh"]

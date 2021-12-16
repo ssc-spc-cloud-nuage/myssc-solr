@@ -11,7 +11,7 @@ WORKDIR="/opt/solr/server/home"
 sudo init_volumes
 
 # Moved into init_volumed
-# mkdir -p /opt/solr/server/solr/configsets
+mkdir -p /opt/solr/server/home/configsets
 
 # migrate
 
@@ -25,6 +25,8 @@ done
 if [[ ! -f "${WORKDIR}"/solr.xml ]]; then
     sudo ln -s /opt/docker-solr/solr.xml "${WORKDIR}"/solr.xml
 fi
+
+sudo chown -R solr:solr /opt/solr/server/home
 
 if [[ -f /opt/solr/bin/solr.in.sh ]]; then
     conf_file=/opt/solr/bin/solr.in.sh
