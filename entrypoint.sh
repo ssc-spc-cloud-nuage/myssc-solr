@@ -26,13 +26,15 @@ if [[ ! -f "${WORKDIR}"/solr.xml ]]; then
     sudo ln -s /opt/docker-solr/solr.xml "${WORKDIR}"/solr.xml
 fi
 
+sudo chown solr:solr "${WORKDIR}"
+
 if [[ -f /opt/solr/bin/solr.in.sh ]]; then
     conf_file=/opt/solr/bin/solr.in.sh
 else
     conf_file=/etc/default/solr.in.sh
 fi
 
-sed -E -i 's@^#SOLR_HEAP=".*"@'"SOLR_HEAP=${SOLR_HEAP}"'@' "${conf_file}"
+# sed -E -i 's@^#SOLR_HEAP=".*"@'"SOLR_HEAP=${SOLR_HEAP}"'@' "${conf_file}"
 
 # if [[ "${1}" == 'make' ]]; then
 #     exec "$@" -f /usr/local/bin/actions.mk
