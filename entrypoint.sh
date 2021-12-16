@@ -26,7 +26,7 @@ if [[ ! -f "${WORKDIR}"/solr.xml ]]; then
     sudo ln -s /opt/docker-solr/solr.xml "${WORKDIR}"/solr.xml
 fi
 
-sudo chown solr:solr "${WORKDIR}"
+sudo init_volumes
 
 if [[ -f /opt/solr/bin/solr.in.sh ]]; then
     conf_file=/opt/solr/bin/solr.in.sh
