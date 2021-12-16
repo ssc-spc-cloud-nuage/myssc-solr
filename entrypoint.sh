@@ -18,12 +18,12 @@ sudo init_volumes
 # Symlinks config sets to volume.
 for configset in $(ls -d /opt/docker-solr/configsets/*); do
     if [[ ! -d "${WORKDIR}/configsets/${configset##*/}" ]]; then
-        ln -s "${configset}" "${WORKDIR}"/configsets/;
+        sudo ln -s "${configset}" "${WORKDIR}"/configsets/;
     fi
 done
 
 if [[ ! -f "${WORKDIR}"/solr.xml ]]; then
-    ln -s /opt/docker-solr/solr.xml "${WORKDIR}"/solr.xml
+    sudo ln -s /opt/docker-solr/solr.xml "${WORKDIR}"/solr.xml
 fi
 
 if [[ -f /opt/solr/bin/solr.in.sh ]]; then
