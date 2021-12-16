@@ -6,7 +6,7 @@ if [[ -n "${DEBUG}" ]]; then
     set -x
 fi
 
-WORKDIR="/opt/solr-${SOLR_VER}/server/solr"
+WORKDIR="/opt/solr-${SOLR_VER}/server/home"
 
 sudo init_volumes
 
