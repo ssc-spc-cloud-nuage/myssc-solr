@@ -89,12 +89,16 @@ RUN set -ex; \
     rm -f /opt/solr/server/lib/ext/log4j-api-2.14.1.jar; \
     rm -f /opt/solr/server/lib/ext/log4j-core-2.14.1.jar; \
     rm -f /opt/solr/server/lib/ext/log4j-slf4j-impl-2.14.1.jar; \
-    rm -f /opt/solr/server/lib/ext/log4j-web-2.14.1.jar
+    rm -f /opt/solr/server/lib/ext/log4j-web-2.14.1.jar; \
+    rm -f /opt/solr/contrib/prometheus-exporter/lib/log4j-core-2.14.1.jar; \
+    rm -f /opt/solr/contrib/prometheus-exporter/lib/log4j-api-2.14.1.jar; \
+    rm -f /opt/solr/contrib/prometheus-exporter/lib/log4j-slf4j-impl-2.14.1.jar
 
 COPY --from=build --chown=solr:solr /opt/docker-solr/configsets /opt/docker-solr/configsets
 COPY bin /usr/local/bin
 COPY entrypoint.sh /
 COPY log4j-bin/* /opt/solr/server/lib/ext/
+COPY log4j-bin/* /opt/solr/contrib/prometheus-exporter/lib/
 
 USER solr
 
